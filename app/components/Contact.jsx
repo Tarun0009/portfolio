@@ -20,75 +20,85 @@ export default function Contact() {
 
     setTimeout(() => {
       setLoading(false);
-      setStatus("✅ Message sent! I’ll get back to you shortly.");
+      setStatus("Message sent successfully.");
       setFormData({ name: "", email: "", message: "" });
 
       setTimeout(() => setStatus(""), 3000);
-    }, 2000);
+    }, 1500);
   };
 
   return (
-    <section id="contact" className="py-12 px-4 sm:px-6 bg-[#0c0c0c] text-gray-100">
-      <div className="max-w-5xl mx-auto text-center">
-        <h2 className="text-2xl sm:text-3xl font-bold text-white">Get in Touch</h2>
-        <p className="mt-2 text-sm sm:text-base text-gray-400">
-          Open to freelance, collaborations, or just a chat. Drop a message or connect on socials.
+    <section id="contact" className="py-16 bg-black text-gray-100">
+      <div className="max-w-5xl mx-auto px-6 text-center">
+        <h2 className="text-3xl font-semibold text-white">Get in Touch</h2>
+        <p className="mt-3 text-gray-400 max-w-xl mx-auto">
+          Open to freelance, full-time roles, collaborations, or just a conversation.
         </p>
       </div>
 
-      <div className="mt-10 grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+      <div className="mt-12 grid md:grid-cols-2 gap-8 max-w-5xl mx-auto px-6">
         
-        {/* Left Box */}
-        <div className="bg-black/80 p-5 rounded-lg border border-white/10 shadow-[0_0_10px_rgba(255,255,255,0.08)]">
-          <h3 className="text-lg font-semibold text-white mb-3">Let’s Connect</h3>
+        {/* Contact Info */}
+        <div className="bg-zinc-900 p-6 rounded-xl border border-white/10">
+          <h3 className="text-lg font-medium text-white mb-6">
+            Contact Information
+          </h3>
 
-          <div className="space-y-3 text-gray-400 text-sm">
-            <p className="flex items-center gap-2">
-              <Mail className="w-4 h-4 text-blue-500" />
-              <a href="mailto:tarunpratapsingh097@gmail.com" className="hover:underline text-blue-400">
-                tarunpratapsingh097@gmail.com
-              </a>
-            </p>
+          <div className="space-y-4 text-sm text-gray-400">
+            <a
+              href="mailto:tarunpratapsingh097@gmail.com"
+              className="flex items-center gap-3 hover:text-white transition"
+            >
+              <Mail className="w-4 h-4" />
+              tarunpratapsingh097@gmail.com
+            </a>
 
-            <p className="flex items-center gap-2">
-              <Phone className="w-4 h-4 text-blue-500" />
-              <a href="tel:+919717862329" className="hover:underline text-blue-400">
-                +91 97178 62329
-              </a>
-            </p>
+            <a
+              href="tel:+919717862329"
+              className="flex items-center gap-3 hover:text-white transition"
+            >
+              <Phone className="w-4 h-4" />
+              +91 97178 62329
+            </a>
 
-            <p className="flex items-center gap-2">
-              <Linkedin className="w-4 h-4 text-blue-500" />
-              <a href="https://www.linkedin.com/in/tarun-pratap-singh/" target="_blank" className="hover:underline text-blue-400">
-                LinkedIn
-              </a>
-            </p>
+            <a
+              href="https://www.linkedin.com/in/tarun-pratap-singh/"
+              target="_blank"
+              className="flex items-center gap-3 hover:text-white transition"
+            >
+              <Linkedin className="w-4 h-4" />
+              LinkedIn
+            </a>
 
-            <p className="flex items-center gap-2">
-              <Github className="w-4 h-4 text-gray-200" />
-              <a href="https://github.com/tarunpratapsingh" target="_blank" className="hover:underline text-gray-300">
-                GitHub
-              </a>
-            </p>
+            <a
+              href="https://github.com/tarunpratapsingh"
+              target="_blank"
+              className="flex items-center gap-3 hover:text-white transition"
+            >
+              <Github className="w-4 h-4" />
+              GitHub
+            </a>
           </div>
         </div>
 
-        {/* Contact Form */}
+        {/* Form */}
         <form
           onSubmit={handleSubmit}
-          className="bg-black/80 p-5 rounded-lg border border-white/10 shadow-[0_0_10px_rgba(255,255,255,0.08)]"
+          className="bg-zinc-900 p-6 rounded-xl border border-white/10"
         >
-          <h3 className="text-base font-semibold text-white mb-3">Send a Message</h3>
+          <h3 className="text-lg font-medium text-white mb-5">
+            Send a Message
+          </h3>
 
-          <div className="space-y-3">
+          <div className="space-y-4">
             <input
               type="text"
               name="name"
               value={formData.name}
               onChange={handleChange}
-              placeholder="Your Name"
+              placeholder="Your name"
               required
-              className="w-full p-2.5 bg-gray-900 border border-white/10 rounded text-sm text-white"
+              className="w-full px-4 py-2.5 bg-black border border-white/10 rounded-lg text-sm text-white placeholder-gray-500 focus:outline-none focus:border-white/30"
             />
 
             <input
@@ -96,9 +106,9 @@ export default function Contact() {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder="Your Email"
+              placeholder="Your email"
               required
-              className="w-full p-2.5 bg-gray-900 border border-white/10 rounded text-sm text-white"
+              className="w-full px-4 py-2.5 bg-black border border-white/10 rounded-lg text-sm text-white placeholder-gray-500 focus:outline-none focus:border-white/30"
             />
 
             <textarea
@@ -106,22 +116,24 @@ export default function Contact() {
               rows="4"
               value={formData.message}
               onChange={handleChange}
-              placeholder="Your Message"
+              placeholder="Your message"
               required
-              className="w-full p-2.5 bg-gray-900 border border-white/10 rounded text-sm text-white resize-none"
+              className="w-full px-4 py-2.5 bg-black border border-white/10 rounded-lg text-sm text-white placeholder-gray-500 resize-none focus:outline-none focus:border-white/30"
             />
 
             <button
               type="submit"
               disabled={loading}
-              className={`w-full py-2 text-sm font-medium rounded transition ${
-                loading ? "bg-gray-700" : "bg-blue-600 hover:bg-blue-700"
-              }`}
+              className="w-full py-2.5 rounded-lg text-sm font-medium bg-white text-black hover:bg-gray-200 transition disabled:opacity-60"
             >
-              {loading ? "Sending..." : "Send Message"}
+              {loading ? "Sending…" : "Send message"}
             </button>
 
-            {status && <p className="text-green-400 mt-2 text-xs">{status}</p>}
+            {status && (
+              <p className="text-xs text-green-400 text-center mt-2">
+                {status}
+              </p>
+            )}
           </div>
         </form>
       </div>
