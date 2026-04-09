@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "additionalDirectories": [
+      "c:\\Users\\Tarun\\Documents\\personal portfolio\\portfolio\\app\\components"
+    ],
+    "allow": [
+      "Bash(npm install:*)"
+    ]
+  }
+}

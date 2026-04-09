@@ -1,8 +1,35 @@
 @import "tailwindcss";
 
+/* ─── Design Tokens ───────────────────────────────────────────── */
 :root {
-  --background: #ffffff;
+  --bg-primary:   #ffffff;
+  --bg-secondary: #f4f4f5;   /* zinc-100 — clear contrast from white */
+  --bg-card:      #fafafa;
+  --bg-nav:       rgba(255, 255, 255, 0.9);
+  --text-primary:   #171717;
+  --text-secondary: #525252;
+  --text-muted:     #a3a3a3;
+  --border-color:   rgba(0, 0, 0, 0.08);
   --foreground: #171717;
+  --background: #ffffff;
+
+  /* Spacing scale — used as section padding */
+  --section-py-sm: 5rem;    /* 80px */
+  --section-py-md: 7rem;    /* 112px */
+  --section-py-lg: 9rem;    /* 144px */
+}
+
+.dark {
+  --bg-primary:   #0a0a0a;
+  --bg-secondary: #111113;   /* distinct contrast in dark */
+  --bg-card:      rgba(255, 255, 255, 0.03);
+  --bg-nav:       rgba(0, 0, 0, 0.9);
+  --text-primary:   #f5f5f5;
+  --text-secondary: #a3a3a3;
+  --text-muted:     #737373;
+  --border-color:   rgba(255, 255, 255, 0.08);
+  --foreground: #ededed;
+  --background: #0a0a0a;
 }
 
 @theme inline {
@@ -12,15 +39,74 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* ─── Base ────────────────────────────────────────────────────── */
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.65;
+  overflow-x: hidden;
+}
+
+/* ─── Custom Cursor ───────────────────────────────────────────── */
+@media (hover: hover) and (pointer: fine) {
+  * { cursor: none !important; }
+}
+
+/* ─── Scroll ──────────────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+  overscroll-behavior-y: none;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* ─── Touch ───────────────────────────────────────────────────── */
+button, a, [role="button"] {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* ─── Selection ───────────────────────────────────────────────── */
+::selection {
+  background-color: rgba(59, 130, 246, 0.3);
+  color: white;
+}
+
+/* ─── Scrollbar ───────────────────────────────────────────────── */
+::-webkit-scrollbar       { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(128, 128, 128, 0.25);
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(128, 128, 128, 0.5);
+}
+
+/* ─── Focus ───────────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+:focus:not(:focus-visible) { outline: none; }
+
+/* ─── Safe Area ───────────────────────────────────────────────── */
+body { padding-bottom: env(safe-area-inset-bottom, 0px); }
+
+/* ─── Section separators ──────────────────────────────────────── */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(255,255,255,0.07), transparent);
+}
+
+/* ─── Reduced Motion ──────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

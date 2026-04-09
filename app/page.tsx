@@ -1,9 +1,11 @@
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import About from "./components/About";
+import Experience from "./components/Experience";
 import Skills from "./components/Skills";
+import Services from "./components/Services";
 import Projects from "./components/Projects";
-import CertificateSection from "./components/CertificateSection";
+import GitHubActivity from "./components/GitHubActivity";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 
@@ -13,9 +15,11 @@ export default function Home() {
       <Navbar />
       <Hero />
       <About />
+      <Experience />
       <Skills />
+      <Services />
       <Projects />
-      <CertificateSection />
+      <GitHubActivity />
       <Contact />
       <Footer />
     </main>
