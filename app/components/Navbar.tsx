@@ -74,8 +74,11 @@ export default function Navbar() {
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
+    const frame = requestAnimationFrame(handleScroll);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, [handleScroll]);
 
   const scrollToSection = (id: string) => {

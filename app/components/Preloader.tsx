@@ -8,8 +8,8 @@ export default function Preloader() {
 
   useEffect(() => {
     if (sessionStorage.getItem("preloaded")) {
-      setIsLoading(false);
-      return;
+      const frame = requestAnimationFrame(() => setIsLoading(false));
+      return () => cancelAnimationFrame(frame);
     }
 
     // Skip long animation for users who prefer reduced motion
