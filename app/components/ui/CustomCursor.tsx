@@ -18,7 +18,7 @@ export default function CustomCursor() {
     const isTouchDevice = "ontouchstart" in window || navigator.maxTouchPoints > 0;
     if (isTouchDevice) return;
 
-    setIsVisible(true);
+    const frame = requestAnimationFrame(() => setIsVisible(true));
 
     const moveCursor = (e: MouseEvent) => {
       cursorX.set(e.clientX);
@@ -47,6 +47,7 @@ export default function CustomCursor() {
     document.addEventListener("mouseout", handleMouseOut);
 
     return () => {
+      cancelAnimationFrame(frame);
       window.removeEventListener("mousemove", moveCursor);
       document.removeEventListener("mouseover", handleMouseOver);
       document.removeEventListener("mouseout", handleMouseOut);

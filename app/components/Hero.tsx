@@ -14,20 +14,6 @@ const socials = [
   { href: "mailto:tarunpratapsingh097@gmail.com", icon: FaEnvelope, label: "Email", hover: "hover:text-cyan-400 hover:border-cyan-400/40" },
 ];
 
-const floatVariant = {
-  animate: {
-    y: [0, -8, 0],
-    transition: { duration: 3, repeat: Infinity, ease: "easeInOut" },
-  },
-};
-
-const floatVariant2 = {
-  animate: {
-    y: [0, 8, 0],
-    transition: { duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 },
-  },
-};
-
 export default function Hero() {
   return (
     <header
