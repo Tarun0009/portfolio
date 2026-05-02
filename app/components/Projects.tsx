@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaExternalLinkAlt, FaCode, FaMobileAlt, FaLayerGroup } from "react-icons/fa";
+import { FaExternalLinkAlt, FaCode, FaMobileAlt, FaLayerGroup, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import TiltCard from "./ui/TiltCard";
 
 interface Project {
@@ -11,6 +11,7 @@ interface Project {
   description: string;
   link: string;
   image: string;
+  screenshots?: { src: string; label: string }[];
   tech: string;
   category: "Web" | "Mobile";
 }
@@ -25,6 +26,24 @@ const projects: Project[] = [
     category: "Web",
   },
   {
+    title: "BumbleBee Arcade – PWA Game Hub",
+    description: "Cross-platform installable PWA featuring 4 brain-training mini games with offline support, achievement system, and leaderboard. Built with a single codebase for Web, Android, and iOS.",
+    link: "#",
+    image: "/images/01-home-screen.png",
+    screenshots: [
+      { src: "/images/01-home-screen.png", label: "Home" },
+      { src: "/images/01b-home-scrolled.png", label: "Games List" },
+      { src: "/images/02-tap-the-bee.png", label: "Tap the Bee" },
+      { src: "/images/03-memory-match.png", label: "Memory Match" },
+      { src: "/images/04-stroop-master.png", label: "Stroop Master" },
+      { src: "/images/05-math-blitz.png", label: "Math Blitz" },
+      { src: "/images/06-leaderboard.png", label: "Leaderboard" },
+      { src: "/images/07-settings.png", label: "Settings" },
+    ],
+    tech: "React Native, Expo, React Navigation, AsyncStorage, Service Worker, PWA",
+    category: "Mobile",
+  },
+  {
     title: "OM Tech Solutions – Company Website",
     description: "A fully responsive and dynamic company website built using React.js and Tailwind CSS.",
     link: "https://tarun0009.github.io/omconsulting/#/",
@@ -35,19 +54,89 @@ const projects: Project[] = [
 
 ];
 
-function ImageWithSkeleton({ src, alt }: { src: string; alt: string }) {
+function ImageWithSkeleton({ src, alt, contain }: { src: string; alt: string; contain?: boolean }) {
   const [loaded, setLoaded] = useState(false);
   return (
-    <div className="w-full aspect-video relative bg-zinc-800/80 rounded-2xl overflow-hidden">
+    <div className={`w-full ${contain ? "aspect-[9/16]" : "aspect-video"} relative bg-zinc-800/80 rounded-2xl overflow-hidden`}>
       {!loaded && <div className="absolute inset-0 animate-pulse bg-zinc-700/60" />}
       <Image
         src={src}
         alt={alt}
         fill
         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-        className={`object-cover transition-opacity duration-700 ${loaded ? "opacity-100" : "opacity-0"}`}
+        className={`${contain ? "object-contain" : "object-cover"} transition-opacity duration-700 ${loaded ? "opacity-100" : "opacity-0"}`}
         onLoad={() => setLoaded(true)}
       />
+    </div>
+  );
+}
+
+function ScreenshotCarousel({ screenshots, alt }: { screenshots: { src: string; label: string }[]; alt: string }) {
+  const [current, setCurrent] = useState(0);
+
+  const prev = useCallback(() => setCurrent((c) => (c === 0 ? screenshots.length - 1 : c - 1)), [screenshots.length]);
+  const next = useCallback(() => setCurrent((c) => (c === screenshots.length - 1 ? 0 : c + 1)), [screenshots.length]);
+
+  return (
+    <div className="relative group/carousel">
+      {/* Main image - mobile portrait aspect ratio */}
+      <div className="w-full aspect-[9/16] max-h-[420px] relative bg-zinc-800/80 rounded-2xl overflow-hidden">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={current}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="absolute inset-0"
+          >
+            <Image
+              src={screenshots[current].src}
+              alt={`${alt} - ${screenshots[current].label}`}
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              className="object-contain"
+            />
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Navigation arrows */}
+        <button
+          onClick={(e) => { e.stopPropagation(); prev(); }}
+          className="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-black/60 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white/80 hover:text-white hover:bg-black/80 transition-all opacity-0 group-hover/carousel:opacity-100"
+        >
+          <FaChevronLeft className="text-xs" />
+        </button>
+        <button
+          onClick={(e) => { e.stopPropagation(); next(); }}
+          className="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-black/60 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white/80 hover:text-white hover:bg-black/80 transition-all opacity-0 group-hover/carousel:opacity-100"
+        >
+          <FaChevronRight className="text-xs" />
+        </button>
+
+        {/* Label badge */}
+        <div className="absolute top-3 left-3 z-10 px-2.5 py-1 rounded-lg bg-black/60 backdrop-blur-sm border border-white/10 text-[10px] font-semibold text-white/90">
+          {screenshots[current].label}
+        </div>
+
+        {/* Counter */}
+        <div className="absolute top-3 right-3 z-10 px-2 py-1 rounded-lg bg-black/60 backdrop-blur-sm border border-white/10 text-[10px] font-medium text-white/70">
+          {current + 1}/{screenshots.length}
+        </div>
+      </div>
+
+      {/* Dot indicators */}
+      <div className="flex justify-center gap-1.5 mt-3">
+        {screenshots.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setCurrent(i)}
+            className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+              i === current ? "bg-blue-400 w-4" : "bg-white/20 hover:bg-white/40"
+            }`}
+          />
+        ))}
+      </div>
     </div>
   );
 }
@@ -149,20 +238,26 @@ export default function Projects() {
                   className="group h-full border border-white/6 rounded-3xl p-6 bg-zinc-900/50 backdrop-blur-sm hover:border-blue-500/25 hover:shadow-xl hover:shadow-blue-500/8 transition-all duration-500"
                   tiltAmount={5}
                 >
-                  {/* Image */}
+                  {/* Image / Screenshot Carousel */}
                   <div className="relative overflow-hidden rounded-2xl">
-                    <ImageWithSkeleton src={project.image} alt={project.title} />
-                    {/* Desktop hover overlay */}
-                    <div className="absolute inset-0 bg-linear-to-t from-black/85 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden sm:flex items-end p-5">
-                      <a
-                        href={project.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-full py-3 bg-white text-black font-bold text-xs rounded-xl flex items-center justify-center gap-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500"
-                      >
-                        <FaExternalLinkAlt /> View Project
-                      </a>
-                    </div>
+                    {project.screenshots ? (
+                      <ScreenshotCarousel screenshots={project.screenshots} alt={project.title} />
+                    ) : (
+                      <>
+                        <ImageWithSkeleton src={project.image} alt={project.title} />
+                        {/* Desktop hover overlay */}
+                        <div className="absolute inset-0 bg-linear-to-t from-black/85 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden sm:flex items-end p-5">
+                          <a
+                            href={project.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-full py-3 bg-white text-black font-bold text-xs rounded-xl flex items-center justify-center gap-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500"
+                          >
+                            <FaExternalLinkAlt /> View Project
+                          </a>
+                        </div>
+                      </>
+                    )}
                   </div>
 
                   {/* Mobile always-visible link */}
