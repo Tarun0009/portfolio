@@ -2,16 +2,25 @@
 
 import { useState, useMemo, useCallback } from "react";
 import Image from "next/image";
+import type { StaticImageData } from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaExternalLinkAlt, FaCode, FaMobileAlt, FaLayerGroup, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import TiltCard from "./ui/TiltCard";
+import beeHome from "@/app/screenshots/01-home-screen.png";
+import beeHomeScrolled from "@/app/screenshots/01b-home-scrolled.png";
+import beeTap from "@/app/screenshots/02-tap-the-bee.png";
+import beeMemory from "@/app/screenshots/03-memory-match.png";
+import beeStroop from "@/app/screenshots/04-stroop-master.png";
+import beeMath from "@/app/screenshots/05-math-blitz.png";
+import beeLeaderboard from "@/app/screenshots/06-leaderboard.png";
+import beeSettings from "@/app/screenshots/07-settings.png";
 
 interface Project {
   title: string;
   description: string;
   link: string;
-  image: string;
-  screenshots?: { src: string; label: string }[];
+  image: string | StaticImageData;
+  screenshots?: { src: string | StaticImageData; label: string }[];
   tech: string;
   category: "Web" | "Mobile";
 }
@@ -29,16 +38,16 @@ const projects: Project[] = [
     title: "BumbleBee Arcade – PWA Game Hub",
     description: "Cross-platform installable PWA featuring 4 brain-training mini games with offline support, achievement system, and leaderboard. Built with a single codebase for Web, Android, and iOS.",
     link: "#",
-    image: "/images/01-home-screen.png",
+    image: beeHome,
     screenshots: [
-      { src: "/images/01-home-screen.png", label: "Home" },
-      { src: "/images/01b-home-scrolled.png", label: "Games List" },
-      { src: "/images/02-tap-the-bee.png", label: "Tap the Bee" },
-      { src: "/images/03-memory-match.png", label: "Memory Match" },
-      { src: "/images/04-stroop-master.png", label: "Stroop Master" },
-      { src: "/images/05-math-blitz.png", label: "Math Blitz" },
-      { src: "/images/06-leaderboard.png", label: "Leaderboard" },
-      { src: "/images/07-settings.png", label: "Settings" },
+      { src: beeHome, label: "Home" },
+      { src: beeHomeScrolled, label: "Games List" },
+      { src: beeTap, label: "Tap the Bee" },
+      { src: beeMemory, label: "Memory Match" },
+      { src: beeStroop, label: "Stroop Master" },
+      { src: beeMath, label: "Math Blitz" },
+      { src: beeLeaderboard, label: "Leaderboard" },
+      { src: beeSettings, label: "Settings" },
     ],
     tech: "React Native, Expo, React Navigation, AsyncStorage, Service Worker, PWA",
     category: "Mobile",
@@ -47,17 +56,17 @@ const projects: Project[] = [
     title: "OM Tech Solutions – Company Website",
     description: "A fully responsive and dynamic company website built using React.js and Tailwind CSS.",
     link: "https://tarun0009.github.io/omconsulting/#/",
-    image: "/images/omtech.png",
+    image: "/images/omtech.PNG",
     tech: "React.js, Tailwind CSS",
     category: "Web",
   },
 
 ];
 
-function ImageWithSkeleton({ src, alt, contain }: { src: string; alt: string; contain?: boolean }) {
+function ImageWithSkeleton({ src, alt, contain }: { src: string | StaticImageData; alt: string; contain?: boolean }) {
   const [loaded, setLoaded] = useState(false);
   return (
-    <div className={`w-full ${contain ? "aspect-[9/16]" : "aspect-video"} relative bg-zinc-800/80 rounded-2xl overflow-hidden`}>
+    <div className={`w-full ${contain ? "aspect-[9/16]" : "aspect-video"} relative bg-zinc-800/80 rounded-xl overflow-hidden`}>
       {!loaded && <div className="absolute inset-0 animate-pulse bg-zinc-700/60" />}
       <Image
         src={src}
@@ -71,7 +80,7 @@ function ImageWithSkeleton({ src, alt, contain }: { src: string; alt: string; co
   );
 }
 
-function ScreenshotCarousel({ screenshots, alt }: { screenshots: { src: string; label: string }[]; alt: string }) {
+function ScreenshotCarousel({ screenshots, alt }: { screenshots: { src: string | StaticImageData; label: string }[]; alt: string }) {
   const [current, setCurrent] = useState(0);
 
   const prev = useCallback(() => setCurrent((c) => (c === 0 ? screenshots.length - 1 : c - 1)), [screenshots.length]);
@@ -80,7 +89,7 @@ function ScreenshotCarousel({ screenshots, alt }: { screenshots: { src: string; 
   return (
     <div className="relative group/carousel">
       {/* Main image - mobile portrait aspect ratio */}
-      <div className="w-full aspect-[9/16] max-h-[420px] relative bg-zinc-800/80 rounded-2xl overflow-hidden">
+      <div className="w-full aspect-[9/16] max-h-[340px] relative bg-zinc-800/80 rounded-xl overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div
             key={current}
@@ -126,7 +135,7 @@ function ScreenshotCarousel({ screenshots, alt }: { screenshots: { src: string; 
       </div>
 
       {/* Dot indicators */}
-      <div className="flex justify-center gap-1.5 mt-3">
+      <div className="flex justify-center gap-1.5 mt-2.5">
         {screenshots.map((_, i) => (
           <button
             key={i}
@@ -163,7 +172,7 @@ export default function Projects() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
 
         {/* Section header */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-10">
           <motion.div
             className="flex items-center justify-center mb-4"
             initial={{ opacity: 0, y: 8 }}
@@ -198,7 +207,7 @@ export default function Projects() {
         </div>
 
         {/* Filter pills */}
-        <div className="flex justify-center mb-8">
+        <div className="flex justify-center mb-7">
           <div className="flex p-1.5 bg-zinc-900/60 backdrop-blur-sm rounded-2xl border border-white/6 gap-1">
             {categories.map((cat) => (
               <button
@@ -223,7 +232,7 @@ export default function Projects() {
         </div>
 
         {/* Cards grid */}
-        <motion.div layout className="grid gap-7 sm:grid-cols-2">
+        <motion.div layout className="grid gap-5 sm:grid-cols-2">
           <AnimatePresence mode="popLayout">
             {filteredProjects.map((project) => (
               <motion.div
@@ -235,7 +244,7 @@ export default function Projects() {
                 transition={{ duration: 0.35 }}
               >
                 <TiltCard
-                  className="group h-full border border-white/6 rounded-3xl p-6 bg-zinc-900/50 backdrop-blur-sm hover:border-blue-500/25 hover:shadow-xl hover:shadow-blue-500/8 transition-all duration-500"
+                  className="group h-full border border-white/6 rounded-2xl p-4 sm:p-5 bg-zinc-900/50 backdrop-blur-sm hover:border-blue-500/25 hover:shadow-xl hover:shadow-blue-500/8 transition-all duration-500"
                   tiltAmount={5}
                 >
                   {/* Image / Screenshot Carousel */}
@@ -265,30 +274,30 @@ export default function Projects() {
                     href={project.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-4 sm:hidden flex items-center justify-center gap-2 py-2.5 rounded-xl border border-white/10 bg-white/5 text-xs font-semibold text-gray-300 hover:text-white hover:border-white/25 active:bg-white/10 transition-all duration-300"
+                    className="mt-3 sm:hidden flex items-center justify-center gap-2 py-2.5 rounded-xl border border-white/10 bg-white/5 text-xs font-semibold text-gray-300 hover:text-white hover:border-white/25 active:bg-white/10 transition-all duration-300"
                   >
                     <FaExternalLinkAlt className="text-[10px]" /> View Project
                   </a>
 
                   {/* Content */}
-                  <div className="mt-5">
-                    <div className="flex items-center gap-2 mb-3">
+                  <div className="mt-4">
+                    <div className="flex items-center gap-2 mb-2.5">
                       <span className="text-[10px] font-bold uppercase tracking-widest text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded-full border border-blue-500/20">
                         {project.category}
                       </span>
                     </div>
-                    <h3 className="text-base sm:text-lg font-bold text-white leading-snug group-hover:text-blue-400 transition-colors duration-300">
+                    <h3 className="text-sm sm:text-base font-bold text-white leading-snug group-hover:text-blue-400 transition-colors duration-300">
                       {project.title}
                     </h3>
-                    <p className="mt-2.5 text-sm text-gray-400 leading-relaxed line-clamp-2">
+                    <p className="mt-2 text-xs sm:text-sm text-gray-400 leading-relaxed line-clamp-2">
                       {project.description}
                     </p>
 
-                    <div className="mt-5 pt-4 border-t border-white/6 flex flex-wrap gap-2">
+                    <div className="mt-4 pt-3 border-t border-white/6 flex flex-wrap gap-1.5">
                       {project.tech.split(", ").map((tech, i) => (
                         <span
                           key={i}
-                          className="text-[11px] font-medium text-gray-400 bg-zinc-800/70 px-3 py-1 rounded-lg border border-white/6"
+                          className="text-[10px] sm:text-[11px] font-medium text-gray-400 bg-zinc-800/70 px-2.5 py-1 rounded-lg border border-white/6"
                         >
                           {tech}
                         </span>
