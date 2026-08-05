@@ -1,117 +1,141 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Image from "next/image";
+import { motion } from "framer-motion";
+import { Check, Github, Linkedin, Mail, Phone } from "lucide-react";
+
+const focusAreas = [
+  "React Native Apps",
+  "Web Development",
+  "Next.js & Remix",
+  "Product UI",
+];
 
 export default function About() {
   return (
-    <section
-      id="about"
-      className="relative py-16 sm:py-20 lg:py-24 bg-(--bg-secondary) text-gray-100 border-t border-white/5 overflow-hidden"
-    >
-      {/* Ambient glow */}
-      <div className="absolute top-0 left-0 w-80 h-80 bg-blue-600/8 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-80 h-80 bg-purple-600/8 rounded-full blur-[140px] pointer-events-none" />
+    <section id="about" className="section-shell bg-[#050605]">
+      <div className="site-container grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-12 xl:gap-16">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          viewport={{ once: true, margin: "-80px" }}
+          className="max-w-[640px]"
+        >
+          <p className="text-xs font-bold uppercase tracking-[0.14em] text-white/58 sm:text-sm">
+            About Me
+          </p>
+          <h2 className="mt-4 max-w-3xl text-[clamp(1.7rem,2.6vw,2.6rem)] font-semibold leading-[1.1] tracking-[-0.035em] text-white">
+            Professional{" "}
+            <span className="text-[var(--accent)]">Web & Mobile Solutions</span>
+            <br />
+            For Digital Products
+          </h2>
+          <p className="mt-5 max-w-[560px] text-xs font-medium leading-6 text-white/58 sm:text-sm">
+            I&apos;m Tarun, a developer focused on modern web and mobile products. My work sits at the intersection of clean interfaces, thoughtful motion, and code that scales.
+          </p>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 relative z-10">
-        <div className="flex flex-col-reverse md:flex-row items-center gap-10 md:gap-12 lg:gap-16">
-
-          {/* Image */}
-          <motion.div
-            className="w-full md:w-5/12 flex justify-center"
-            initial={{ opacity: 0, x: -40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-          >
-            <div className="relative w-full max-w-[340px] md:max-w-none">
-              {/* Decorative border ring */}
-              <div className="absolute -inset-3 rounded-3xl bg-linear-to-br from-blue-500/20 via-transparent to-purple-500/20 blur-sm" />
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                transition={{ type: "spring", stiffness: 250, damping: 20 }}
-                className="relative rounded-2xl overflow-hidden border border-white/10 shadow-[0_24px_64px_-12px_rgba(59,130,246,0.15)]"
+          <div className="mt-7 grid gap-x-8 gap-y-3 sm:grid-cols-2">
+            {focusAreas.map((area) => (
+              <div
+                key={area}
+                className="flex items-center gap-2.5 text-sm font-semibold text-white sm:text-base"
               >
-                <Image
-                  src="/images/about.jpg"
-                  alt="Tarun Pratap Singh"
-                  width={500}
-                  height={500}
-                  className="object-cover w-full h-auto"
-                  sizes="(max-width: 768px) 90vw, 45vw"
-                />
-              </motion.div>
-            </div>
-          </motion.div>
+                <Check className="h-4 w-4 shrink-0 stroke-[3] text-[var(--accent)]" />
+                <span>{area}</span>
+              </div>
+            ))}
+          </div>
 
-          {/* Text */}
-          <motion.div
-            className="w-full md:w-7/12 text-center md:text-left"
-            initial={{ opacity: 0, x: 40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-          >
-            {/* Section pill */}
-            <motion.div
-              className="flex items-center justify-center md:justify-start mb-4"
-              initial={{ opacity: 0, y: 8 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-              viewport={{ once: true }}
+          <div className="mt-8 grid overflow-hidden rounded-2xl border border-white/12 bg-white/[0.08] p-2.5 shadow-2xl shadow-black/30 backdrop-blur sm:grid-cols-2 sm:p-3">
+            <a
+              href="mailto:tarunpratapsingh097@gmail.com"
+              className="group flex items-center gap-2.5 rounded-xl p-2.5 transition hover:bg-white/[0.04]"
             >
-              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-semibold uppercase tracking-widest text-cyan-400 bg-cyan-500/10 border border-cyan-500/20">
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
-                About Me
+              <span style={{ color: "#000" }} className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--accent)]">
+                <Mail className="h-3.5 w-3.5" />
               </span>
-            </motion.div>
+              <span className="min-w-0">
+                <span className="block text-[11px] font-bold uppercase tracking-tight text-white/46">
+                  Email Us
+                </span>
+                <span className="mt-0.5 block break-all text-xs font-semibold text-white group-hover:text-[var(--accent)] sm:text-sm">
+                  tarunpratapsingh097@gmail.com
+                </span>
+              </span>
+            </a>
 
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold bg-linear-to-r from-cyan-400 via-purple-400 to-pink-500 text-transparent bg-clip-text mb-6 leading-tight">
-              About Me
-            </h2>
-
-            <p className="text-sm sm:text-base lg:text-lg leading-relaxed text-gray-300 space-y-4">
-              I&apos;m <span className="font-semibold text-blue-400">Tarun Pratap Singh</span> — a passionate developer focused on building intuitive, scalable, and performant apps.
-              <br /><br />
-              Skilled in <span className="font-semibold bg-linear-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text">React.js, React Native, Tailwind CSS, and Java</span>, I aim to deliver solutions that matter.
-              <br /><br />
-              I completed my <span className="text-blue-400 font-semibold">B.Tech in Computer Science</span> in 2024. I also love sports, gaming, and exploring new ideas.
-            </p>
-
-            {/* Quote card */}
-            <motion.div
-              className="mt-8 px-5 py-4 rounded-2xl border-l-2 border-blue-500/60 bg-blue-500/5 border border-blue-500/10"
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              viewport={{ once: true }}
+            <a
+              href="tel:+919717862329"
+              className="group flex items-center gap-2.5 rounded-xl p-2.5 transition hover:bg-white/[0.04]"
             >
-              <p className="italic text-gray-400 text-sm leading-relaxed">
-                &ldquo;Code is like poetry — each line should have purpose and elegance.&rdquo;
-              </p>
-            </motion.div>
+              <span style={{ color: "#000" }} className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--accent)]">
+                <Phone className="h-3.5 w-3.5" />
+              </span>
+              <span>
+                <span className="block text-[11px] font-bold uppercase tracking-tight text-white/46">
+                  Make A Call
+                </span>
+                <span className="mt-0.5 block text-xs font-semibold text-white group-hover:text-[var(--accent)] sm:text-sm">
+                  +91 97178 62329
+                </span>
+              </span>
+            </a>
+          </div>
 
-            {/* CTA Buttons */}
-            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center md:justify-start gap-3">
-              <a
-                href="https://www.linkedin.com/in/tarun-pratap-singh-941b91220/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full sm:w-auto px-8 py-3 text-sm font-semibold bg-linear-to-r from-blue-500 to-blue-600 hover:from-blue-400 hover:to-blue-500 text-white rounded-2xl transition-all duration-300 shadow-lg shadow-blue-500/25 text-center"
-              >
-                Let&apos;s Connect
-              </a>
-              <a
-                href="/images/Tarun_resume.pdf"
-                download
-                className="w-full sm:w-auto px-8 py-3 text-sm font-semibold text-blue-400 border border-blue-500/30 bg-blue-500/8 hover:bg-blue-500/15 rounded-2xl transition-all duration-300 text-center"
-              >
-                Download Resume
-              </a>
-            </div>
-          </motion.div>
-        </div>
+          <div className="mt-4 flex items-center gap-2">
+            <a
+              href="mailto:tarunpratapsingh097@gmail.com"
+              aria-label="Email"
+              title="Email"
+              className="grid h-10 w-10 place-items-center rounded-full border border-white/12 text-white/62 transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
+            >
+              <Mail className="h-4 w-4" />
+            </a>
+            <a
+              href="https://github.com/Tarun0009"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub"
+              title="GitHub"
+              className="grid h-10 w-10 place-items-center rounded-full border border-white/12 text-white/62 transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
+            >
+              <Github className="h-4 w-4" />
+            </a>
+            <a
+              href="https://www.linkedin.com/in/tarun-pratap-singh-941b91220/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+              title="LinkedIn"
+              className="grid h-10 w-10 place-items-center rounded-full border border-white/12 text-white/62 transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
+            >
+              <Linkedin className="h-4 w-4" />
+            </a>
+          </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+          viewport={{ once: true, margin: "-80px" }}
+          className="relative mx-auto w-full max-w-[320px] lg:mx-0 lg:justify-self-end xl:max-w-[360px]"
+        >
+          <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-[#171915] shadow-2xl shadow-black/45">
+            <Image
+              src="/images/about.jpg"
+              alt="Tarun Pratap Singh"
+              fill
+              sizes="(max-width: 640px) 80vw, (max-width: 1024px) 320px, 360px"
+              className="object-cover object-center"
+            />
+          </div>
+        </motion.div>
       </div>
     </section>
   );
 }
+
+
+

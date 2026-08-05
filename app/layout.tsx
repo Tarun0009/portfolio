@@ -1,10 +1,22 @@
 import "./globals.css";
 import React from "react";
 import type { Metadata } from "next";
-import ThemeProvider from "./providers/ThemeProvider";
-import Preloader from "./components/Preloader";
-import CustomCursor from "./components/ui/CustomCursor";
+import { Space_Grotesk, Instrument_Serif } from "next/font/google";
 import ScrollProgress from "./components/ui/ScrollProgress";
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-body",
+  display: "swap",
+});
+
+const instrumentSerif = Instrument_Serif({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-display",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://tarunpratapsingh.dev"),
@@ -58,7 +70,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${spaceGrotesk.variable} ${instrumentSerif.variable} scroll-smooth`}
+    >
       <head>
         <script
           type="application/ld+json"
@@ -88,15 +103,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
       </head>
-      <body className="antialiased selection:bg-blue-500/30 selection:text-white">
-        <ThemeProvider>
-          <Preloader />
-          <ScrollProgress />
-          <CustomCursor />
-          <main className="relative z-0 overflow-x-hidden">
-            {children}
-          </main>
-        </ThemeProvider>
+      <body className="antialiased">
+        <div className="noise-layer" />
+        <ScrollProgress />
+        <main className="relative z-10 overflow-x-hidden">{children}</main>
       </body>
     </html>
   );
