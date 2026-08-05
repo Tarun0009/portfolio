@@ -53,9 +53,17 @@ const projects: Project[] = [
     category: "Mobile",
   },
   {
+<<<<<<< Updated upstream
     title: "OM Tech Solutions – Company Website",
     description: "A fully responsive and dynamic company website built using React.js and Tailwind CSS.",
     link: "https://tarun0009.github.io/omconsulting/#/",
+=======
+    title: "OM Tech Solutions",
+    type: "Company Website / Corporate",
+    description:
+      "Responsive company website with clean content structure, reusable UI patterns and fast static deployment.",
+    link: "https://omconsulting.vercel.app/",
+>>>>>>> Stashed changes
     image: "/images/omtech.PNG",
     tech: "React.js, Tailwind CSS",
     category: "Web",
