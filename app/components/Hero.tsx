@@ -1,195 +1,134 @@
 "use client";
 
-import { ReactTyped } from "react-typed";
-import { motion } from "framer-motion";
-import { FaGithub, FaLinkedin, FaEnvelope } from "react-icons/fa";
-import { FaDownload } from "react-icons/fa";
-import Image from "next/image";
-import Squares from "./Squares";
-import ProfilePic from "@/public/images/img.png";
 
-const socials = [
-  { href: "https://www.linkedin.com/in/tarun-pratap-singh-941b91220", icon: FaLinkedin, label: "LinkedIn", hover: "hover:text-blue-400 hover:border-blue-400/40" },
-  { href: "https://github.com/Tarun0009", icon: FaGithub, label: "GitHub", hover: "hover:text-gray-200 hover:border-white/30" },
-  { href: "mailto:tarunpratapsingh097@gmail.com", icon: FaEnvelope, label: "Email", hover: "hover:text-cyan-400 hover:border-cyan-400/40" },
+import Image from "next/image";
+import dynamic from "next/dynamic";
+import { motion } from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
+import HeroSkillsTicker from "./HeroSkillsTicker";
+
+const HeroCanvas = dynamic(() => import("./HeroCanvas"), { ssr: false });
+
+const stats = [
+  { value: "1+", label: "Years Of Experience" },
+  { value: "3+", label: "Project Complete" },
+  { value: "100%", label: "Client Satisfactions" },
 ];
 
 export default function Hero() {
   return (
     <header
       id="home"
-      className="relative min-h-screen flex items-start lg:items-center text-white"
+      className="relative w-full min-h-[100svh] overflow-hidden bg-[#121312] text-white xl:h-[100svh] xl:min-h-[560px]"
     >
-      {/* Background grid */}
-      <div className="absolute inset-0 -z-10">
-        <Squares direction="diagonal" speed={0.4} borderColor="#222" hoverFillColor="#0f0" />
+      {/* Three.js particle field — interactive lime dots that react to cursor */}
+      <div className="pointer-events-none absolute inset-0 z-[1] hidden sm:block">
+        <HeroCanvas />
       </div>
 
-      {/* Ambient glows */}
-      <div className="absolute top-1/3 left-0 w-[500px] h-[500px] bg-blue-600/15 rounded-full blur-[120px] pointer-events-none -z-10" />
-      <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-purple-600/10 rounded-full blur-[120px] pointer-events-none -z-10" />
-      <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-cyan-500/8 rounded-full blur-[100px] pointer-events-none -z-10" />
+      <div
+        className="absolute inset-0 pointer-events-none opacity-50 z-[2]"
+        style={{
+          backgroundImage:
+            "linear-gradient(to right, rgba(255,255,255,0.075) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.035) 1px, transparent 1px)",
+          backgroundSize: "clamp(72px, 10vw, 190px) 100%, 100% 100%",
+        }}
+      />
+      <div className="absolute inset-x-0 top-0 h-px bg-white/12 z-[2]" />
+      <div className="absolute inset-x-0 bottom-0 h-px bg-white/12 z-[2]" />
 
-      <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 w-full py-20 lg:py-16 relative z-10">
-        <div className="flex flex-col-reverse lg:flex-row items-center justify-between gap-12 lg:gap-16">
-
-          {/* ── Left: Text ─────────────────────────────── */}
-          <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left">
-
-            {/* Navbar spacer - slight clearance from fixed navbar */}
-            <div className="h-20" />
-
-            {/* Availability badge */}
-            <motion.div
-              className="flex items-center gap-2 px-4 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 text-xs font-semibold tracking-wide mb-6 relative z-20"
-              initial={{ opacity: 0, y: 0 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-            >
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              Available for opportunities
-            </motion.div>
-
-            {/* Name */}
-            <motion.h1
-              className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-[1.1] tracking-tight mb-5"
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.2 }}
-            >
-              Hello, I&apos;m{" "}
-              <span className="block bg-linear-to-r from-blue-400 via-cyan-400 to-purple-400 text-transparent bg-clip-text">
-                Tarun Pratap Singh
-              </span>
-            </motion.h1>
-
-            {/* Typed role */}
-            <motion.div
-              className="text-base sm:text-lg lg:text-xl text-blue-300/80 font-medium min-h-[1.8em] mb-5"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.45 }}
-            >
-              <ReactTyped
-                strings={[
-                  "React Native & Frontend Developer",
-                  "Next.js & Remix Specialist",
-                  "Aspiring FullStack Developer | Java Developer",
-                  "I build performant mobile & web applications",
-                ]}
-                typeSpeed={50}
-                backSpeed={30}
-                loop
-              />
-            </motion.div>
-
-            {/* Bio */}
-            <motion.p
-              className="text-gray-400 text-sm sm:text-base lg:text-lg leading-relaxed max-w-lg mb-8"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.6 }}
-            >
-              Passionate about crafting intuitive, scalable, and accessible web solutions.
-            </motion.p>
-
-            {/* CTAs */}
-            <motion.div
-              className="flex flex-col sm:flex-row items-center gap-3 mb-8 w-full sm:w-auto"
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.75 }}
-            >
-              <a
-                href="#projects"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-linear-to-r from-blue-500 to-cyan-500 hover:from-blue-400 hover:to-cyan-400 text-white py-3.5 px-9 rounded-2xl text-sm font-bold transition-all duration-300 shadow-lg shadow-blue-500/30"
-              >
-                Explore My Work
-              </a>
-              <a
-                href="/images/Tarun_resume.pdf"
-                download
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 text-blue-400 border border-blue-500/30 bg-blue-500/8 hover:bg-blue-500/15 hover:border-blue-500/50 py-3.5 px-9 rounded-2xl text-sm font-bold transition-all duration-300"
-              >
-                <FaDownload className="text-xs" />
-                Download CV
-              </a>
-            </motion.div>
-
-            {/* Social icons */}
-            <motion.div
-              className="flex items-center gap-3"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.9 }}
-            >
-              {socials.map(({ href, icon: Icon, label, hover }) => (
-                <motion.a
-                  key={label}
-                  href={href}
-                  target={href.startsWith("mailto") ? undefined : "_blank"}
-                  rel="noopener noreferrer"
-                  aria-label={label}
-                  className={`w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 text-white/60 ${hover} transition-all duration-300 text-base`}
-                  whileHover={{ scale: 1.1, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Icon />
-                </motion.a>
-              ))}
-
-              <div className="w-px h-5 bg-white/10 mx-1" />
-              <span className="text-[11px] text-gray-600 uppercase tracking-widest font-medium">Follow me</span>
-            </motion.div>
-          </div>
-
-          {/* ── Right: Image ───────────────────────────── */}
-          <motion.div
-            className="w-full lg:w-1/2 flex justify-center"
-            initial={{ opacity: 0, x: 40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.9, delay: 0.3 }}
-          >
-            <div className="relative">
-              {/* Outer glow ring */}
-              <div className="absolute -inset-4 rounded-3xl bg-linear-to-br from-blue-500/25 via-cyan-400/10 to-purple-500/25 blur-xl pointer-events-none" />
-
-              {/* Profile image */}
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                className="relative rounded-2xl overflow-hidden border border-white/10 shadow-[0_32px_80px_-12px_rgba(59,130,246,0.2)] w-[280px] h-[280px] sm:w-[340px] sm:h-[340px] lg:w-[400px] lg:h-[400px]"
-              >
-                <Image
-                  src={ProfilePic}
-                  alt="Tarun Pratap Singh"
-                  fill
-                  priority
-                  className="object-cover object-center"
-                  sizes="(max-width: 640px) 280px, (max-width: 1024px) 340px, 400px"
-                />
-              </motion.div>
-
-            </div>
-          </motion.div>
-
-        </div>
-      </div>
-
-      {/* Scroll indicator */}
-      <motion.div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 text-gray-600"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 1.6 }}
-      >
-        <span className="text-[10px] uppercase tracking-[0.2em] font-medium">Scroll</span>
+      <div className="relative mx-auto grid min-h-[100svh] max-w-[1540px] min-w-0 items-center gap-x-6 gap-y-7 px-4 pb-24 pt-28 sm:px-6 sm:pb-24 sm:pt-32 lg:grid-cols-[minmax(0,0.88fr)_minmax(330px,0.9fr)] lg:gap-y-4 lg:px-8 lg:pb-20 lg:pt-20 xl:h-full xl:min-h-0 xl:grid-cols-[minmax(0,0.9fr)_minmax(390px,0.92fr)_minmax(240px,0.46fr)] xl:gap-x-2 xl:pb-24 xl:pt-20">
         <motion.div
-          className="w-px h-8 bg-linear-to-b from-gray-600 to-transparent"
-          animate={{ scaleY: [1, 0.4, 1], opacity: [0.4, 1, 0.4] }}
-          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-        />
-      </motion.div>
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+          className="relative z-20 max-w-[560px] lg:self-center xl:-mr-10"
+        >
+          <p className="text-[clamp(1.55rem,2.1vw,2.65rem)] font-medium leading-none tracking-[-0.055em] text-white/42">
+            Hello, i&apos;m
+          </p>
+
+          <h1 className="mt-4 max-w-[560px] font-black leading-[0.98] tracking-[-0.055em]">
+            <span className="block text-[clamp(2rem,10vw,2.35rem)] text-[var(--accent)] sm:text-[clamp(2.35rem,3.25vw,3.85rem)]">
+              Tarun Pratap Singh
+            </span>
+            <span className="mt-3 block text-[clamp(1.75rem,8.5vw,2.05rem)] font-semibold tracking-[-0.055em] text-white sm:text-[clamp(2.05rem,2.95vw,3.45rem)]">
+              React Native Developer
+            </span>
+          </h1>
+
+          <p className="mt-5 max-w-[500px] text-sm font-semibold leading-7 text-white/62 sm:text-base">
+            Frontend developer specializing in high-performance mobile apps and modern web technologies like Next.js, Remix and Expo.
+          </p>
+
+          <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+            <a
+              href="#contact"
+              style={{ color: "#000" }}
+              className="inline-flex min-h-12 items-center justify-center gap-2.5 rounded-[0.9rem] bg-[var(--accent)] px-7 text-sm font-black transition hover:-translate-y-1"
+            >
+              Hire Me
+              <ArrowUpRight className="h-4 w-4" />
+            </a>
+            {/*
+            <a
+              href="/images/Tarun_resume.pdf"
+              download
+              className="inline-flex items-center justify-center gap-2.5 text-sm font-bold text-white underline decoration-white/60 decoration-1 underline-offset-4 transition hover:text-[var(--accent)] hover:decoration-[var(--accent)]"
+            >
+              Download Resume
+              <ArrowUpRight className="h-4 w-4" />
+            </a>
+            */}
+          </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+          className="relative z-10 mx-auto aspect-square w-[min(80vw,400px)] sm:w-[min(58vw,480px)] lg:w-[min(35vw,460px)] lg:self-end xl:w-[min(31vw,calc(100svh-11rem),560px)] 2xl:w-[min(31vw,calc(100svh-11rem),580px)]"
+        >
+          <div
+            className="absolute inset-[1%] rounded-full"
+            style={{
+              background:
+                "conic-gradient(from 18deg, transparent 0deg, transparent 28deg, var(--accent) 28deg, var(--accent) 143deg, transparent 143deg, transparent 238deg, var(--accent) 238deg, var(--accent) 280deg, transparent 280deg)",
+            }}
+          />
+          <div className="absolute inset-[7%] overflow-hidden rounded-full border border-white/10 bg-black">
+            <Image
+              src="/images/img.png"
+              alt="Tarun Pratap Singh"
+              fill
+              priority
+              sizes="(max-width: 640px) 80vw, (max-width: 1024px) 58vw, (max-width: 1280px) 35vw, 560px"
+              className="object-cover object-[50%_35%]"
+            />
+          </div>
+        </motion.div>
+        <motion.aside
+          initial={{ opacity: 0, x: 24 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.65, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          className="relative z-20 mx-auto grid w-full max-w-[860px] grid-cols-3 rounded-[1.35rem] bg-black p-3 shadow-2xl shadow-black/45 sm:p-4 lg:col-span-2 xl:col-span-1 xl:mx-0 xl:block xl:max-w-[250px] xl:justify-self-end xl:p-5"
+        >
+          {stats.map((stat) => (
+            <div key={stat.label} className="min-w-0 border-r border-white/12 px-2 py-1 last:border-r-0 sm:px-4 xl:border-r-0 xl:border-b xl:px-0 xl:py-6 xl:first:pt-1 xl:last:border-b-0 xl:last:pb-1">
+              <p className="text-[clamp(1.55rem,8vw,2rem)] font-black leading-none tracking-[-0.06em] text-[var(--accent)] sm:text-[clamp(1.85rem,3.7vw,2.85rem)] xl:text-[clamp(2rem,2.5vw,2.85rem)]">
+                {stat.value}
+              </p>
+              <p className="mt-2 text-[10px] font-medium leading-4 text-white/72 sm:text-xs sm:leading-5 xl:mt-3 xl:text-sm">{stat.label}</p>
+            </div>
+          ))}
+        </motion.aside>
+      </div>
+
+      <HeroSkillsTicker />
     </header>
   );
 }
+
+
+
+

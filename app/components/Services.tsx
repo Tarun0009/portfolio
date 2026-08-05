@@ -1,117 +1,103 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FaCode, FaMobileAlt, FaRocket } from "react-icons/fa";
-import type { IconType } from "react-icons";
-import TiltCard from "./ui/TiltCard";
+import { ArrowUpRight, Code2, Gauge, MonitorSmartphone, Sparkles } from "lucide-react";
 
-interface Service {
-  title: string;
-  description: string;
-  icon: IconType;
-  gradient: string;
-  glow: string;
-}
-
-const services: Service[] = [
+const services = [
   {
     title: "Web Development",
-    description: "Building modern, responsive websites with React, Next.js, and cutting-edge technologies.",
-    icon: FaCode,
-    gradient: "from-blue-500 to-cyan-500",
-    glow: "rgba(59,130,246,0.12)",
+    description:
+      "Modern, responsive websites and web apps built with React, Next.js and Remix. Server-side rendering, clean architecture and polished UI as standard.",
+    icon: Code2,
+    tags: ["Next.js", "React", "Remix", "TypeScript", "Tailwind"],
   },
   {
     title: "Mobile Development",
-    description: "Cross-platform mobile apps using React Native with seamless user experiences.",
-    icon: FaMobileAlt,
-    gradient: "from-purple-500 to-pink-500",
-    glow: "rgba(168,85,247,0.12)",
+    description:
+      "Cross-platform iOS and Android apps with React Native and Expo. Native-feeling UX with a shared product-minded codebase.",
+    icon: MonitorSmartphone,
+    tags: ["React Native", "Expo", "PWA", "AsyncStorage"],
   },
   {
-    title: "Performance Optimization",
-    description: "Speed up your applications with best practices in caching, lazy loading, and code splitting.",
-    icon: FaRocket,
-    gradient: "from-indigo-500 to-purple-500",
-    glow: "rgba(99,102,241,0.12)",
+    title: "Motion & UX",
+    description:
+      "Framer Motion micro-interactions, scroll-triggered animations, and refined product flows that make interfaces feel intentional.",
+    icon: Sparkles,
+    tags: ["Framer Motion", "Interaction", "UX", "Polish"],
+  },
+  {
+    title: "Performance & Polish",
+    description:
+      "Caching, lazy loading, code splitting, Lighthouse audits, and a practical eye for the details users actually feel.",
+    icon: Gauge,
+    tags: ["Performance", "SEO", "A11y", "Web Vitals"],
   },
 ];
 
 export default function Services() {
   return (
-    <section id="services" className="py-16 sm:py-20 lg:py-24 bg-(--bg-primary) text-gray-100 border-t border-white/5">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6">
+    <section id="services" className="section-shell bg-[#0b0e09]">
+      <div className="site-container">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55 }}
+          viewport={{ once: true, margin: "-80px" }}
+          className="max-w-3xl"
+        >
+          <span className="section-kicker">Popular services</span>
+          <h2 className="display-heading mt-4 text-[clamp(1.7rem,2.6vw,2.6rem)] text-[var(--foreground)]">
+            What I can help build.
+          </h2>
+        </motion.div>
 
-        {/* Section header */}
-        <div className="text-center mb-12">
-          <motion.div
-            className="flex items-center justify-center mb-4"
-            initial={{ opacity: 0, y: 8 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            viewport={{ once: true }}
-          >
-            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-semibold uppercase tracking-widest text-purple-400 bg-purple-500/10 border border-purple-500/20">
-              <span className="w-1.5 h-1.5 rounded-full bg-purple-400" />
-              Services
-            </span>
-          </motion.div>
-
-          <motion.h2
-            className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-linear-to-r from-blue-400 to-cyan-400 text-transparent bg-clip-text"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            What I Do
-          </motion.h2>
-          <motion.p
-            className="mt-4 text-gray-400 max-w-md mx-auto text-sm sm:text-base"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            viewport={{ once: true }}
-          >
-            Services I offer to bring your ideas to life.
-          </motion.p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 lg:gap-8">
-          {services.map((service, i) => {
+        <div className="mt-8 grid gap-3 md:grid-cols-2">
+          {services.map((service, index) => {
             const Icon = service.icon;
             return (
-              <motion.div
+              <motion.article
                 key={service.title}
-                initial={{ opacity: 0, y: 32 }}
+                initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.45, delay: i * 0.12 }}
-                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.08 }}
+                viewport={{ once: true, margin: "-80px" }}
+                className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.035] p-5 transition duration-300 hover:-translate-y-1 hover:border-[var(--accent)]/50 hover:bg-white/[0.055] sm:p-6"
               >
-                <TiltCard
-                  className="group relative h-full rounded-2xl border border-white/8 bg-zinc-900/60 p-7 sm:p-8 backdrop-blur-sm hover:border-white/18 transition-all duration-400 overflow-hidden"
-                  tiltAmount={8}
-                >
-                  {/* Card glow bg */}
-                  <div
-                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                    style={{ background: `radial-gradient(ellipse at top left, ${service.glow}, transparent 70%)` }}
-                  />
-
-                  {/* Icon */}
-                  <div className={`relative inline-flex p-4 rounded-2xl bg-linear-to-br ${service.gradient} mb-6 shadow-lg`}>
-                    <Icon className="text-2xl text-white" />
-                  </div>
-
-                  <h3 className="text-lg font-bold text-white mb-3 group-hover:text-white transition-colors">
+                <div className="absolute right-5 top-5 text-4xl font-bold tracking-[-0.08em] text-white/[0.035] transition group-hover:text-[var(--accent)]/10">
+                  {String(index + 1).padStart(2, "0")}.
+                </div>
+                <div className="relative z-10">
+                  <span
+                    style={{ color: "#000" }}
+                    className="grid h-10 w-10 place-items-center rounded-full bg-[var(--accent)]"
+                  >
+                    <Icon className="h-4 w-4" />
+                  </span>
+                  <h3 className="mt-6 max-w-xs text-lg font-bold tracking-[-0.035em] text-[var(--foreground)] sm:text-xl">
                     {service.title}
                   </h3>
-                  <p className="text-sm text-gray-400 leading-relaxed">{service.description}</p>
-
-                  {/* Bottom accent line */}
-                  <div className={`absolute bottom-0 left-0 right-0 h-0.5 bg-linear-to-r ${service.gradient} opacity-0 group-hover:opacity-60 transition-opacity duration-400`} />
-                </TiltCard>
-              </motion.div>
+                  <p className="mt-3 text-xs leading-6 text-[var(--muted)] sm:text-sm">
+                    {service.description}
+                  </p>
+                  <div className="mt-5 flex flex-wrap gap-1.5">
+                    {service.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded-full border border-white/10 px-2.5 py-0.5 text-[10px] font-semibold text-[var(--muted-strong)]"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  <a
+                    href="#contact"
+                    className="mt-5 inline-flex items-center gap-1.5 text-xs font-bold text-[var(--accent)]"
+                  >
+                    Let&apos;s discuss
+                    <ArrowUpRight className="h-3.5 w-3.5 transition group-hover:translate-x-1 group-hover:-translate-y-1" />
+                  </a>
+                </div>
+              </motion.article>
             );
           })}
         </div>
@@ -119,3 +105,4 @@ export default function Services() {
     </section>
   );
 }
+
