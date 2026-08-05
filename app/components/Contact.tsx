@@ -1,27 +1,78 @@
 "use client";
 
-import { useState, type FormEvent, type ChangeEvent } from "react";
-import { Mail, Phone, Linkedin, Github } from "lucide-react";
+import { useMemo, useState, type ChangeEvent, type FocusEvent, type FormEvent } from "react";
 import { motion } from "framer-motion";
+import { AlertCircle, ArrowUpRight, Check, Mail, MessageSquare, Phone, Tag, User } from "lucide-react";
 
-interface FormData {
-  name: string;
-  email: string;
-  message: string;
+type Field = "name" | "email" | "phone" | "subject" | "message";
+type FormState = Record<Field, string>;
+type Errors = Partial<Record<Field, string>>;
+type Touched = Partial<Record<Field, boolean>>;
+
+const focusPoints = [
+  "1+ Years Of Experience",
+  "React Native & Frontend",
+  "Mobile Apps Development",
+];
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const PHONE_REGEX = /^[+\d][\d\s()-]{6,20}$/;
+
+function validate(form: FormState): Errors {
+  const errors: Errors = {};
+
+  const name = form.name.trim();
+  if (!name) errors.name = "Please enter your name.";
+  else if (name.length < 2) errors.name = "Name is too short.";
+
+  const email = form.email.trim();
+  if (!email) errors.email = "Email is required.";
+  else if (!EMAIL_REGEX.test(email)) errors.email = "Enter a valid email address.";
+
+  const phone = form.phone.trim();
+  if (phone && !PHONE_REGEX.test(phone)) errors.phone = "Enter a valid phone number.";
+
+  const subject = form.subject.trim();
+  if (subject && subject.length < 3) errors.subject = "Subject is too short.";
+
+  const message = form.message.trim();
+  if (!message) errors.message = "Message is required.";
+  else if (message.length < 10) errors.message = "Message should be at least 10 characters.";
+
+  return errors;
 }
 
 export default function Contact() {
-  const [formData, setFormData] = useState<FormData>({ name: "", email: "", message: "" });
+  const [form, setForm] = useState<FormState>({
+    name: "",
+    email: "",
+    phone: "",
+    subject: "",
+    message: "",
+  });
+  const [touched, setTouched] = useState<Touched>({});
   const [status, setStatus] = useState<"" | "sending" | "success" | "error">("");
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const errors = useMemo(() => validate(form), [form]);
+  const isValid = Object.keys(errors).length === 0;
+
+  const onChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e: FormEvent) => {
+  const onBlur = (e: FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name } = e.target;
+    setTouched((prev) => ({ ...prev, [name]: true }));
+  };
+
+  const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    // Mark every field touched so all errors surface on submit
+    setTouched({ name: true, email: true, phone: true, subject: true, message: true });
+    if (!isValid) return;
+
     setLoading(true);
     setStatus("sending");
     try {
@@ -30,16 +81,15 @@ export default function Contact() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           access_key: "YOUR_WEB3FORMS_ACCESS_KEY",
-          name: formData.name,
-          email: formData.email,
-          message: formData.message,
+          ...form,
           from_name: "Portfolio Contact Form",
         }),
       });
       const result = await response.json();
       if (result.success) {
         setStatus("success");
-        setFormData({ name: "", email: "", message: "" });
+        setForm({ name: "", email: "", phone: "", subject: "", message: "" });
+        setTouched({});
       } else {
         setStatus("error");
       }
@@ -47,162 +97,284 @@ export default function Contact() {
       setStatus("error");
     } finally {
       setLoading(false);
-      setTimeout(() => setStatus(""), 4000);
+      setTimeout(() => setStatus(""), 5000);
     }
   };
 
-  const inputClass = "w-full px-4 py-3.5 bg-white/3 border border-white/10 rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 hover:border-white/20 transition-all duration-300";
-
   return (
-    <section id="contact" className="py-16 sm:py-20 lg:py-24 bg-(--bg-secondary) text-gray-100 border-t border-white/5">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6">
-
-        {/* Section header */}
-        <div className="text-center mb-12">
+    <section id="contact" className="section-shell scroll-mt-24 bg-[#080a07]">
+      <div className="site-container">
+        <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start lg:gap-14 xl:gap-16">
+          {/* Left column — intro + checklist */}
           <motion.div
-            className="flex items-center justify-center mb-4"
-            initial={{ opacity: 0, y: 8 }}
+            initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            viewport={{ once: true, margin: "-80px" }}
           >
-            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-semibold uppercase tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/20">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-              Say Hello
-            </span>
-          </motion.div>
+            <p className="text-xs font-bold uppercase tracking-[0.14em] text-white/58 sm:text-sm">
+              Get In Touch
+            </p>
 
-          <motion.h2
-            className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-linear-to-r from-blue-400 to-cyan-400 text-transparent bg-clip-text"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            Get in Touch
-          </motion.h2>
-          <motion.p
-            className="mt-4 text-gray-400 max-w-md mx-auto text-sm sm:text-base"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            viewport={{ once: true }}
-          >
-            Open to freelance, full-time roles, collaborations, or just a conversation.
-          </motion.p>
-        </div>
+            <h2 className="mt-4 max-w-xl text-[clamp(1.85rem,3.6vw,3rem)] font-bold leading-[1.05] tracking-[-0.04em] text-[var(--foreground)]">
+              Let&apos;s Talk For your{" "}
+              <span className="text-[var(--accent)]">Next Projects</span>
+            </h2>
 
-        <div className="grid md:grid-cols-2 gap-6 lg:gap-8">
+            <p className="mt-5 max-w-lg text-sm font-medium leading-6 text-white/58">
+              Open to freelance projects, full-time roles, and collaborations. Send a message and
+              I&apos;ll get back within a day.
+            </p>
 
-          {/* Contact Info */}
-          <motion.div
-            className="flex flex-col gap-6"
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <div className="bg-zinc-900/60 backdrop-blur-sm p-7 sm:p-8 rounded-2xl border border-white/8 hover:border-white/15 transition-colors duration-300 flex-1">
-              <h3 className="text-lg font-bold text-white mb-7">Contact Information</h3>
-
-              <div className="space-y-5">
-                {[
-                  { href: "mailto:tarunpratapsingh097@gmail.com", icon: Mail,    label: "tarunpratapsingh097@gmail.com", color: "bg-blue-500/10 text-blue-400 group-hover:bg-blue-500/20" },
-                  { href: "tel:+919717862329",                    icon: Phone,   label: "+91 97178 62329",                color: "bg-emerald-500/10 text-emerald-400 group-hover:bg-emerald-500/20" },
-                  { href: "https://www.linkedin.com/in/tarun-pratap-singh-941b91220/", icon: Linkedin, label: "LinkedIn", color: "bg-blue-600/10 text-blue-500 group-hover:bg-blue-600/20", external: true },
-                  { href: "https://github.com/Tarun0009",          icon: Github,  label: "GitHub",                        color: "bg-gray-500/10 text-gray-300 group-hover:bg-gray-500/20", external: true },
-                ].map(({ href, icon: Icon, label, color, external }) => (
-                  <a
-                    key={label}
-                    href={href}
-                    target={external ? "_blank" : undefined}
-                    rel={external ? "noopener noreferrer" : undefined}
-                    className="flex items-center gap-4 text-sm text-gray-400 hover:text-white transition-colors duration-300 group"
+            <ul className="mt-8 grid gap-4">
+              {focusPoints.map((point) => (
+                <li key={point} className="flex items-center gap-3">
+                  <span
+                    style={{ color: "#000" }}
+                    className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-[var(--accent)]"
                   >
-                    <span className={`p-3 rounded-xl ${color} transition-colors duration-300 shrink-0`}>
-                      <Icon className="w-4 h-4" />
-                    </span>
-                    <span className="truncate">{label}</span>
-                  </a>
-                ))}
-              </div>
-            </div>
+                    <Check className="h-3.5 w-3.5 stroke-[3]" />
+                  </span>
+                  <span className="text-sm font-semibold text-[var(--foreground)] sm:text-base">
+                    {point}
+                  </span>
+                </li>
+              ))}
+            </ul>
           </motion.div>
 
-          {/* Form */}
+          {/* Right column — form */}
           <motion.form
-            onSubmit={handleSubmit}
-            className="bg-zinc-900/60 backdrop-blur-sm p-7 sm:p-8 rounded-2xl border border-white/8 hover:border-white/15 transition-colors duration-300"
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
+            onSubmit={onSubmit}
+            noValidate
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+            viewport={{ once: true, margin: "-80px" }}
           >
-            <h3 className="text-lg font-bold text-white mb-7">Send a Message</h3>
-
-            <div className="space-y-4">
-              <input
-                type="text"
+            <div className="grid gap-5 sm:grid-cols-2 sm:gap-4">
+              <FormField
+                label="Full Name"
                 name="name"
-                value={formData.name}
-                onChange={handleChange}
-                placeholder="Your name"
-                required
+                type="text"
+                placeholder="Enter your name"
+                value={form.name}
+                onChange={onChange}
+                onBlur={onBlur}
+                Icon={User}
                 autoComplete="name"
-                className={inputClass}
+                error={touched.name ? errors.name : undefined}
               />
-              <input
-                type="email"
+              <FormField
+                label="Email Address"
                 name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="Your email"
-                required
+                type="email"
+                placeholder="Enter your email"
+                value={form.email}
+                onChange={onChange}
+                onBlur={onBlur}
+                Icon={Mail}
                 autoComplete="email"
-                className={inputClass}
+                error={touched.email ? errors.email : undefined}
+                inputMode="email"
               />
-              <textarea
-                name="message"
-                rows={5}
-                value={formData.message}
-                onChange={handleChange}
-                placeholder="Your message"
-                required
-                className={`${inputClass} resize-none`}
+              <FormField
+                label="Phone Number"
+                name="phone"
+                type="tel"
+                placeholder="Enter your phone number"
+                value={form.phone}
+                onChange={onChange}
+                onBlur={onBlur}
+                Icon={Phone}
+                autoComplete="tel"
+                error={touched.phone ? errors.phone : undefined}
+                inputMode="tel"
               />
+              <FormField
+                label="Subject"
+                name="subject"
+                type="text"
+                placeholder="Enter a subject"
+                value={form.subject}
+                onChange={onChange}
+                onBlur={onBlur}
+                Icon={Tag}
+                error={touched.subject ? errors.subject : undefined}
+              />
+            </div>
 
-              <motion.button
+            <div className="mt-5">
+              <label
+                htmlFor="message"
+                className="mb-2 block text-xs font-bold tracking-tight text-[var(--foreground)]"
+              >
+                Message
+              </label>
+              <div className="relative">
+                <textarea
+                  id="message"
+                  name="message"
+                  rows={5}
+                  value={form.message}
+                  onChange={onChange}
+                  onBlur={onBlur}
+                  placeholder="Enter your message"
+                  aria-invalid={Boolean(touched.message && errors.message)}
+                  aria-describedby={touched.message && errors.message ? "message-error" : undefined}
+                  className={inputClasses(Boolean(touched.message && errors.message), "textarea")}
+                />
+                <MessageSquare className="pointer-events-none absolute right-4 top-5 h-5 w-5 text-white/55 sm:right-8" />
+              </div>
+              {touched.message && errors.message && (
+                <FieldError id="message-error">{errors.message}</FieldError>
+              )}
+            </div>
+
+            <div className="mt-7 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3.5 rounded-xl text-sm font-bold bg-linear-to-r from-blue-500 to-cyan-500 text-white hover:from-blue-400 hover:to-cyan-400 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-500/25"
-                whileHover={{ scale: loading ? 1 : 1.01 }}
-                whileTap={{ scale: loading ? 1 : 0.98 }}
+                style={{ color: "#000" }}
+                className="inline-flex w-full items-center justify-center gap-2.5 rounded-full bg-[var(--accent)] px-6 py-3 text-xs font-black uppercase tracking-[0.12em] transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
               >
                 {loading ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  <>
+                    <svg
+                      className="h-3.5 w-3.5 animate-spin"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <circle cx="12" cy="12" r="10" opacity="0.25" />
+                      <path d="M4 12a8 8 0 018-8" />
                     </svg>
-                    Sending...
-                  </span>
-                ) : "Send Message"}
-              </motion.button>
-
-              {status === "success" && (
-                <motion.p className="text-sm text-emerald-400 text-center font-medium" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }}>
-                  Message sent successfully!
-                </motion.p>
-              )}
-              {status === "error" && (
-                <motion.p className="text-sm text-red-400 text-center" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }}>
-                  Failed to send. Please try again or email directly.
-                </motion.p>
-              )}
+                    Sending…
+                  </>
+                ) : (
+                  <>
+                    Send Us Message
+                    <ArrowUpRight className="h-3.5 w-3.5" />
+                  </>
+                )}
+              </button>
             </div>
+
+            {status === "success" && (
+              <motion.p
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mt-5 text-xs font-bold text-[var(--accent)] sm:text-sm"
+              >
+                Message sent successfully &mdash; I&apos;ll be in touch soon.
+              </motion.p>
+            )}
+            {status === "error" && (
+              <motion.p
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mt-5 text-xs font-bold text-red-400 sm:text-sm"
+              >
+                Failed to send. Please email me directly at tarunpratapsingh097@gmail.com.
+              </motion.p>
+            )}
           </motion.form>
         </div>
       </div>
     </section>
   );
 }
+
+/* ---------------- Field primitives ---------------- */
+
+interface FormFieldProps {
+  label: string;
+  name: Field;
+  type: string;
+  placeholder: string;
+  value: string;
+  onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onBlur: (e: FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  Icon: React.ComponentType<{ className?: string }>;
+  autoComplete?: string;
+  inputMode?: "text" | "email" | "tel" | "numeric" | "search" | "url" | "none";
+  error?: string;
+}
+
+function FormField({
+  label,
+  name,
+  type,
+  placeholder,
+  value,
+  onChange,
+  onBlur,
+  Icon,
+  autoComplete,
+  inputMode,
+  error,
+}: FormFieldProps) {
+  const hasError = Boolean(error);
+  return (
+    <div>
+      <label htmlFor={name} className="mb-2 block text-xs font-bold tracking-tight text-[var(--foreground)]">
+        {label}
+      </label>
+      <div className="relative">
+        <input
+          id={name}
+          name={name}
+          type={type}
+          value={value}
+          onChange={onChange}
+          onBlur={onBlur}
+          placeholder={placeholder}
+          autoComplete={autoComplete}
+          inputMode={inputMode}
+          aria-invalid={hasError}
+          aria-describedby={hasError ? `${name}-error` : undefined}
+          className={inputClasses(hasError, "input")}
+        />
+        <Icon
+          className={`pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 transition-colors sm:right-8 ${
+            hasError ? "text-red-400/80" : "text-white/75"
+          }`}
+        />
+      </div>
+      {hasError && <FieldError id={`${name}-error`}>{error}</FieldError>}
+    </div>
+  );
+}
+
+function FieldError({ id, children }: { id: string; children: React.ReactNode }) {
+  return (
+    <motion.p
+      id={id}
+      role="alert"
+      initial={{ opacity: 0, y: -4 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="mt-1.5 flex items-center gap-1.5 text-[11px] font-semibold text-red-400"
+    >
+      <AlertCircle className="h-3 w-3" />
+      {children}
+    </motion.p>
+  );
+}
+
+function inputClasses(hasError: boolean, kind: "input" | "textarea") {
+  const base =
+    "contact-field min-h-[68px] w-full appearance-none rounded-[1.25rem] border border-white/15 bg-black/45 px-4 py-4 pr-12 text-base font-medium text-[var(--foreground)] shadow-none outline-none ring-0 placeholder-white/75 transition duration-200 sm:min-h-[76px] sm:px-9 sm:pr-16 focus:border-[var(--accent)] focus:shadow-none focus:outline-none focus:ring-0 focus-visible:shadow-none focus-visible:outline-none focus-visible:ring-0";
+  const errored = hasError
+    ? "border-red-400/65 focus:border-red-400/90"
+    : "hover:border-white/25";
+  const modifier = kind === "textarea" ? " min-h-[170px] resize-none py-5 pr-12 sm:pr-16" : "";
+  return `${base} ${errored}${modifier}`;
+}
+
+
+
+
+
+
+
