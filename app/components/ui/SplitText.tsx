@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useInView, type Variants } from "framer-motion";
-import { useRef } from "react";
+import { Fragment, useRef } from "react";
 
 interface SplitTextProps {
   children: string;
@@ -72,19 +72,20 @@ export default function SplitText({
       aria-label={children}
     >
       {words.map((w, i) => (
-        <span
-          key={i}
-          className="inline-block overflow-hidden align-bottom leading-[inherit]"
-          aria-hidden="true"
-        >
-          <motion.span
-            className="inline-block will-change-transform leading-[inherit]"
-            variants={word}
+        <Fragment key={i}>
+          <span
+            className="inline-block overflow-hidden align-bottom leading-[inherit]"
+            aria-hidden="true"
           >
-            {w}
-            {i < words.length - 1 ? " " : ""}
-          </motion.span>
-        </span>
+            <motion.span
+              className="inline-block will-change-transform leading-[inherit]"
+              variants={word}
+            >
+              {w}
+            </motion.span>
+          </span>
+          {i < words.length - 1 ? " " : ""}
+        </Fragment>
       ))}
     </MotionOuter>
   );
