@@ -3,88 +3,99 @@
 import { useEffect, useState } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 
+/**
+ * Lime signature cursor.
+ * - Small solid dot follows the pointer 1:1 (no lag).
+ * - Larger ring follows via spring physics (subtle lag = "premium").
+ * - Ring fills solid lime on interactive elements (a / button / [data-cursor]).
+ * - Auto-hides on touch devices.
+ */
 export default function CustomCursor() {
-  const [isVisible, setIsVisible] = useState(false);
+  const [isReady, setIsReady] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
+
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
 
-  const springConfig = { damping: 25, stiffness: 300, mass: 0.5 };
+  const springConfig = { damping: 26, stiffness: 320, mass: 0.5 };
   const followerX = useSpring(cursorX, springConfig);
   const followerY = useSpring(cursorY, springConfig);
 
   useEffect(() => {
-    // Don't show on touch devices
-    const isTouchDevice = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+    const isTouchDevice =
+      "ontouchstart" in window || navigator.maxTouchPoints > 0;
     if (isTouchDevice) return;
 
-    const frame = requestAnimationFrame(() => setIsVisible(true));
+    const frame = requestAnimationFrame(() => setIsReady(true));
 
-    const moveCursor = (e: MouseEvent) => {
+    const onMove = (e: MouseEvent) => {
       cursorX.set(e.clientX);
       cursorY.set(e.clientY);
     };
 
-    const handleMouseOver = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (
-        target.tagName === "A" ||
-        target.tagName === "BUTTON" ||
-        target.closest("a") ||
-        target.closest("button") ||
-        target.classList.contains("cursor-pointer")
-      ) {
-        setIsHovering(true);
+    const isInteractive = (el: HTMLElement | null): boolean => {
+      if (!el) return false;
+      if (el.closest("a, button, [role='button'], [data-cursor], input, textarea, label")) {
+        return true;
       }
+      return false;
     };
 
-    const handleMouseOut = () => {
-      setIsHovering(false);
+    const onOver = (e: MouseEvent) => {
+      if (isInteractive(e.target as HTMLElement)) setIsHovering(true);
     };
 
-    window.addEventListener("mousemove", moveCursor);
-    document.addEventListener("mouseover", handleMouseOver);
-    document.addEventListener("mouseout", handleMouseOut);
+    const onOut = (e: MouseEvent) => {
+      if (isInteractive(e.target as HTMLElement)) setIsHovering(false);
+    };
+
+    window.addEventListener("mousemove", onMove);
+    document.addEventListener("mouseover", onOver);
+    document.addEventListener("mouseout", onOut);
 
     return () => {
       cancelAnimationFrame(frame);
-      window.removeEventListener("mousemove", moveCursor);
-      document.removeEventListener("mouseover", handleMouseOver);
-      document.removeEventListener("mouseout", handleMouseOut);
+      window.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseover", onOver);
+      document.removeEventListener("mouseout", onOut);
     };
   }, [cursorX, cursorY]);
 
-  if (!isVisible) return null;
+  if (!isReady) return null;
 
   return (
     <>
-      {/* Small dot */}
+      {/* Precise dot */}
       <motion.div
-        className="fixed top-0 left-0 w-2 h-2 bg-white rounded-full pointer-events-none z-[9999] mix-blend-difference"
+        aria-hidden="true"
+        className="pointer-events-none fixed left-0 top-0 z-[9999] h-1.5 w-1.5 rounded-full"
         style={{
           x: cursorX,
           y: cursorY,
           translateX: "-50%",
           translateY: "-50%",
+          backgroundColor: "#c9f31d",
         }}
       />
+
       {/* Follower ring */}
       <motion.div
-        className="fixed top-0 left-0 rounded-full pointer-events-none z-[9998] mix-blend-difference border border-white/60"
+        aria-hidden="true"
+        className="pointer-events-none fixed left-0 top-0 z-[9998] rounded-full border"
         style={{
           x: followerX,
           y: followerY,
           translateX: "-50%",
           translateY: "-50%",
-          width: isHovering ? 50 : 32,
-          height: isHovering ? 50 : 32,
+          borderColor: "#c9f31d",
         }}
         animate={{
-          width: isHovering ? 50 : 32,
-          height: isHovering ? 50 : 32,
-          opacity: isHovering ? 0.8 : 0.5,
+          width: isHovering ? 44 : 30,
+          height: isHovering ? 44 : 30,
+          borderWidth: isHovering ? 0 : 1.5,
+          backgroundColor: isHovering ? "rgba(201, 243, 29, 0.85)" : "rgba(201, 243, 29, 0)",
         }}
-        transition={{ duration: 0.2 }}
+        transition={{ type: "spring", stiffness: 260, damping: 22 }}
       />
     </>
   );

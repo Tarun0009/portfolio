@@ -4,12 +4,14 @@ import Image, { type StaticImageData } from "next/image";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import beeHome from "@/app/screenshots/01-home-screen.png";
+import SplitText from "./ui/SplitText";
 
 interface Project {
   title: string;
   type: string;
   description: string;
   link: string;
+  liveLink?: string;
   image: string | StaticImageData;
   tech: string[];
   role: string;
@@ -18,6 +20,30 @@ interface Project {
 }
 
 const projects: Project[] = [
+  {
+    title: "SelfCare",
+    type: "AI Skincare / Mobile + Backend",
+    description:
+      "React Native app that turns a selfie into a personalized AM/PM skincare routine using on-device face validation, Gemini vision analysis and live Amazon product matches, backed by a Fastify + Postgres API.",
+    link: "#",
+    image: "/images/selfcare.png",
+    tech: ["React Native", "TypeScript", "Fastify", "Postgres", "Gemini AI", "Firebase"],
+    role: "Full-stack & Mobile",
+    year: "2025",
+    contain: true,
+  },
+  {
+    title: "Ravi Digital",
+    type: "Marketing Portfolio + CMS",
+    description:
+      "Production Next.js 15 portfolio for a Noida performance-marketing specialist, with a self-serve admin CMS, draft/publish workflow, and an email-OTP-gated resume download that turns passive traffic into a qualified lead channel.",
+    link: "https://ravi-bio.vercel.app/",
+    liveLink: "https://www.ravi-digital.com/",
+    image: "/images/ravi.png",
+    tech: ["Next.js 15", "React 19", "TypeScript", "Supabase", "SMTP", "Vercel"],
+    role: "Full-stack (solo)",
+    year: "2026",
+  },
   {
     title: "PropGenius AI",
     type: "Real Estate CRM / SaaS",
@@ -67,9 +93,13 @@ export default function Projects() {
         >
           <div className="max-w-3xl">
             <span className="section-kicker">Latest works</span>
-            <h2 className="display-heading mt-4 text-[clamp(1.7rem,2.6vw,2.6rem)] text-[var(--foreground)]">
+            <SplitText
+              as="h2"
+              stagger={0.05}
+              className="display-heading mt-4 text-[clamp(1.7rem,2.6vw,2.6rem)] text-[var(--foreground)]"
+            >
               Selected product work.
-            </h2>
+            </SplitText>
           </div>
           <a
             href="#contact"
@@ -90,13 +120,13 @@ export default function Projects() {
               viewport={{ once: true, margin: "-80px" }}
               className="group grid overflow-hidden rounded-[1.4rem] border border-white/10 bg-white/[0.035] transition duration-300 hover:-translate-y-1 hover:border-[var(--accent)]/45 hover:bg-white/[0.055] lg:grid-cols-[1.05fr_0.95fr]"
             >
-              <div className="relative min-h-[200px] overflow-hidden bg-[#151a12] sm:min-h-[260px] lg:min-h-[300px]">
+              <div className="relative aspect-[16/10] overflow-hidden bg-[#0f1310] lg:aspect-auto lg:min-h-[320px]">
                 <Image
                   src={project.image}
                   alt={project.title}
                   fill
-                  sizes="(max-width: 1024px) 94vw, 480px"
-                  className={`${project.contain ? "object-contain p-6" : "object-cover"} transition duration-700 group-hover:scale-[1.035]`}
+                  sizes="(max-width: 1024px) 94vw, 560px"
+                  className={`object-contain ${project.contain ? "p-6" : "p-2"}`}
                 />
                 <div className="absolute left-4 top-4 rounded-full bg-[#080a07]/82 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--accent)] backdrop-blur-md">
                   {project.year}
@@ -137,10 +167,18 @@ export default function Projects() {
                       Case study in progress
                     </span>
                   ) : (
-                    <a href={project.link} target="_blank" rel="noopener noreferrer" className="mt-5 inline-flex items-center gap-2 text-xs font-bold text-[var(--accent)]">
-                      View project
-                      <ArrowUpRight className="h-3.5 w-3.5 transition group-hover:translate-x-1 group-hover:-translate-y-1" />
-                    </a>
+                    <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
+                      <a href={project.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-xs font-bold text-[var(--accent)]">
+                        View project
+                        <ArrowUpRight className="h-3.5 w-3.5 transition group-hover:translate-x-1 group-hover:-translate-y-1" />
+                      </a>
+                      {project.liveLink && (
+                        <a href={project.liveLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-xs font-bold text-[var(--foreground)]">
+                          Live site
+                          <ArrowUpRight className="h-3.5 w-3.5 transition group-hover:translate-x-1 group-hover:-translate-y-1" />
+                        </a>
+                      )}
+                    </div>
                   )}
                 </div>
               </div>

@@ -3,6 +3,7 @@
 import { useMemo, useState, type ChangeEvent, type FocusEvent, type FormEvent } from "react";
 import { motion } from "framer-motion";
 import { AlertCircle, ArrowUpRight, Check, Mail, MessageSquare, Phone, Tag, User } from "lucide-react";
+import SplitText from "./ui/SplitText";
 
 type Field = "name" | "email" | "phone" | "subject" | "message";
 type FormState = Record<Field, string>;
@@ -117,8 +118,17 @@ export default function Contact() {
             </p>
 
             <h2 className="mt-4 max-w-xl text-[clamp(1.85rem,3.6vw,3rem)] font-bold leading-[1.05] tracking-[-0.04em] text-[var(--foreground)]">
-              Let&apos;s Talk For your{" "}
-              <span className="text-[var(--accent)]">Next Projects</span>
+              <SplitText as="span" stagger={0.05}>
+                Let&apos;s Talk For your
+              </SplitText>{" "}
+              <SplitText
+                as="span"
+                stagger={0.05}
+                delay={0.18}
+                className="text-[var(--accent)]"
+              >
+                Next Projects
+              </SplitText>
             </h2>
 
             <p className="mt-5 max-w-lg text-sm font-medium leading-6 text-white/58">

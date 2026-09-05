@@ -3,9 +3,11 @@
 
 import Image from "next/image";
 import dynamic from "next/dynamic";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 import { ArrowUpRight } from "lucide-react";
 import HeroSkillsTicker from "./HeroSkillsTicker";
+import SplitText from "./ui/SplitText";
 
 const HeroCanvas = dynamic(() => import("./HeroCanvas"), { ssr: false });
 
@@ -16,6 +18,15 @@ const stats = [
 ];
 
 export default function Hero() {
+  const reduceMotion = useReducedMotion();
+  const portraitRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: portraitRef,
+    offset: ["start start", "end start"],
+  });
+  const portraitY = useTransform(scrollYProgress, [0, 1], [0, reduceMotion ? 0 : -60]);
+  const portraitScale = useTransform(scrollYProgress, [0, 1], [1, reduceMotion ? 1 : 0.94]);
+
   return (
     <header
       id="home"
@@ -49,12 +60,22 @@ export default function Hero() {
           </p>
 
           <h1 className="mt-4 max-w-[560px] font-black leading-[0.98] tracking-[-0.055em]">
-            <span className="block text-[clamp(2rem,10vw,2.35rem)] text-[var(--accent)] sm:text-[clamp(2.35rem,3.25vw,3.85rem)]">
+            <SplitText
+              as="span"
+              delay={0.15}
+              stagger={0.05}
+              className="block text-[clamp(2rem,10vw,2.35rem)] text-[var(--accent)] sm:text-[clamp(2.35rem,3.25vw,3.85rem)]"
+            >
               Tarun Pratap Singh
-            </span>
-            <span className="mt-3 block text-[clamp(1.75rem,8.5vw,2.05rem)] font-semibold tracking-[-0.055em] text-white sm:text-[clamp(2.05rem,2.95vw,3.45rem)]">
+            </SplitText>
+            <SplitText
+              as="span"
+              delay={0.35}
+              stagger={0.05}
+              className="mt-3 block text-[clamp(1.75rem,8.5vw,2.05rem)] font-semibold tracking-[-0.055em] text-white sm:text-[clamp(2.05rem,2.95vw,3.45rem)]"
+            >
               React Native Developer
-            </span>
+            </SplitText>
           </h1>
 
           <p className="mt-5 max-w-[500px] text-sm font-semibold leading-7 text-white/62 sm:text-base">
@@ -84,9 +105,11 @@ export default function Hero() {
         </motion.div>
 
         <motion.div
+          ref={portraitRef}
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+          style={{ y: portraitY, scale: portraitScale }}
           className="relative z-10 mx-auto aspect-square w-[min(80vw,400px)] sm:w-[min(58vw,480px)] lg:w-[min(35vw,460px)] lg:self-end xl:w-[min(31vw,calc(100svh-11rem),560px)] 2xl:w-[min(31vw,calc(100svh-11rem),580px)]"
         >
           <div

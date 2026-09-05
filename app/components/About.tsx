@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Check, Github, Linkedin, Mail, Phone } from "lucide-react";
+import SplitText from "./ui/SplitText";
 
 const focusAreas = [
   "React Native Apps",
@@ -26,10 +27,21 @@ export default function About() {
             About Me
           </p>
           <h2 className="mt-4 max-w-3xl text-[clamp(1.7rem,2.6vw,2.6rem)] font-semibold leading-[1.1] tracking-[-0.035em] text-white">
-            Professional{" "}
-            <span className="text-[var(--accent)]">Web & Mobile Solutions</span>
+            <SplitText as="span" stagger={0.05}>
+              Professional
+            </SplitText>{" "}
+            <SplitText
+              as="span"
+              stagger={0.05}
+              delay={0.15}
+              className="text-[var(--accent)]"
+            >
+              Web & Mobile Solutions
+            </SplitText>
             <br />
-            For Digital Products
+            <SplitText as="span" stagger={0.05} delay={0.35}>
+              For Digital Products
+            </SplitText>
           </h2>
           <p className="mt-5 max-w-[560px] text-xs font-medium leading-6 text-white/58 sm:text-sm">
             I&apos;m Tarun, a developer focused on modern web and mobile products. My work sits at the intersection of clean interfaces, thoughtful motion, and code that scales.

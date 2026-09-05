@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { BriefcaseBusiness, GraduationCap } from "lucide-react";
+import SplitText from "./ui/SplitText";
 
 const entries = [
   {
@@ -42,9 +43,13 @@ export default function Experience() {
             viewport={{ once: true, margin: "-80px" }}
           >
             <span className="section-kicker">My resume</span>
-            <h2 className="display-heading mt-4 text-[clamp(1.7rem,2.6vw,2.6rem)] text-[var(--foreground)]">
+            <SplitText
+              as="h2"
+              stagger={0.05}
+              className="display-heading mt-4 text-[clamp(1.7rem,2.6vw,2.6rem)] text-[var(--foreground)]"
+            >
               Practical product experience.
-            </h2>
+            </SplitText>
             <p className="mt-4 max-w-md text-xs leading-6 text-[var(--muted)] sm:text-sm">
               A concise view of my current role and academic foundation, focused on the parts that matter for product development.
             </p>

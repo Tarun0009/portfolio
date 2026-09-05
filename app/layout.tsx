@@ -3,6 +3,8 @@ import React from "react";
 import type { Metadata } from "next";
 import { Space_Grotesk, Instrument_Serif } from "next/font/google";
 import ScrollProgress from "./components/ui/ScrollProgress";
+import SmoothScroll from "./components/ui/SmoothScroll";
+import CustomCursor from "./components/ui/CustomCursor";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -105,6 +107,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="antialiased">
         <div className="noise-layer" />
+        <SmoothScroll />
+        <CustomCursor />
         <ScrollProgress />
         <main className="relative z-10 overflow-x-hidden">{children}</main>
       </body>

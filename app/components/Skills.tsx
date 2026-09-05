@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import SplitText from "./ui/SplitText";
 import type { IconType } from "react-icons";
 import {
   SiExpo,
@@ -59,9 +60,13 @@ export default function Skills() {
         >
           <div>
             <span className="section-kicker">My skills</span>
-            <h2 className="display-heading mt-4 max-w-lg text-[clamp(1.7rem,2.6vw,2.6rem)] text-[var(--foreground)]">
+            <SplitText
+              as="h2"
+              stagger={0.05}
+              className="display-heading mt-4 max-w-lg text-[clamp(1.7rem,2.6vw,2.6rem)] text-[var(--foreground)]"
+            >
               A focused toolkit for product work.
-            </h2>
+            </SplitText>
           </div>
 
           <p className="max-w-xl text-xs leading-6 text-[var(--muted)] sm:text-sm md:justify-self-end">
